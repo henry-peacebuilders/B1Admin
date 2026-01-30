@@ -184,9 +184,18 @@ export const FeeOptionsSettingsEdit: React.FC<Props> = (props) => {
   }, [props.currency, hasLoadedData]); //eslint-disable-line
 
   const showStripeFields = props.provider === "Stripe";
-  const showPayPalFields = props.provider === "Paypal";
+  const showPayPalFields = props.provider === "Paypal" || props.provider === "KingdomFunding";
+  const isKingdomFunding = props.provider === "KingdomFunding";
   const currentCurrency = (props.currency || "usd").toLowerCase();
   const showACHFields = currentCurrency === "usd";
+
+  const paypalFlatRateLabel = isKingdomFunding
+    ? Locale.label("settings.feeOptionsSettings.kingdomFundingFlatRate") || "Flat Rate [ Kingdom Funding ]"
+    : Locale.label("settings.feeOptionsSettings.paypalFlatRate") || "PayPal Flat Rate";
+
+  const paypalTransactionFeeLabel = isKingdomFunding
+    ? Locale.label("settings.feeOptionsSettings.kingdomFundingTransactionFee") || "Transaction Fee [ Kingdom Funding ]"
+    : Locale.label("settings.feeOptionsSettings.paypalTransactionFee") || "PayPal Transaction Fee";
 
   return (
     <Grid container spacing={2}>
@@ -257,7 +266,7 @@ export const FeeOptionsSettingsEdit: React.FC<Props> = (props) => {
               fullWidth
               margin="dense"
               type="number"
-              label={Locale.label("settings.feeOptionsSettings.paypalFlatRate") || "PayPal Flat Rate"}
+              label={paypalFlatRateLabel}
               name="paypalFlatRate"
               onChange={handleChange}
               value={options.flatRatePayPal}
@@ -270,7 +279,7 @@ export const FeeOptionsSettingsEdit: React.FC<Props> = (props) => {
               fullWidth
               margin="dense"
               type="number"
-              label={Locale.label("settings.feeOptionsSettings.paypalTransactionFee") || "PayPal Transaction Fee"}
+              label={paypalTransactionFeeLabel}
               name="paypalTransactionFee"
               onChange={handleChange}
               value={options.transFeePayPal}

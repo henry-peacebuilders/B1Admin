@@ -48,12 +48,18 @@ export const GivingSettingsEdit: React.FC<Props> = (props) => {
   const getKeys = () => {
     if (provider === "") return null;
     else {
-      const publicLabel = provider === "Paypal"
+      const isPaypal = provider === "Paypal";
+      const isKingdomFunding = provider === "KingdomFunding";
+      const publicLabel = isPaypal
         ? Locale.label("settings.givingSettingsEdit.clientId") || "Client ID"
         : Locale.label("settings.givingSettingsEdit.pubKey");
-      const privateLabel = provider === "Paypal"
+      const privateLabel = isPaypal
         ? Locale.label("settings.givingSettingsEdit.clientSecret") || "Client Secret"
-        : Locale.label("settings.givingSettingsEdit.secKey");
+        : isKingdomFunding
+          ? Locale.label("settings.givingSettingsEdit.merchantId") || "Merchant ID"
+          : Locale.label("settings.givingSettingsEdit.secKey");
+      const privatePlaceholder = Locale.label("settings.giving.secretPlaceholder");
+      const privateType = isKingdomFunding ? "text" : "password";
 
       return (
         <>
@@ -61,7 +67,7 @@ export const GivingSettingsEdit: React.FC<Props> = (props) => {
             <TextField fullWidth name="publicKey" label={publicLabel} value={publicKey} onChange={handleChange} placeholder={Locale.label("placeholders.giving.publicKey")} />
           </Grid>
           <Grid size={{ xs: 12, md: 4 }}>
-            <TextField fullWidth name="privateKey" label={privateLabel} value={privateKey} placeholder={Locale.label("settings.giving.secretPlaceholder")} type="password" onChange={handleChange} />
+            <TextField fullWidth name="privateKey" label={privateLabel} value={privateKey} placeholder={privatePlaceholder} type={privateType} onChange={handleChange} />
           </Grid>
           <Grid size={{ xs: 12 }}>
             <Stack direction="row" alignItems="center">
@@ -167,6 +173,7 @@ export const GivingSettingsEdit: React.FC<Props> = (props) => {
               <MenuItem value="">{Locale.label("settings.givingSettingsEdit.none")}</MenuItem>
               <MenuItem value="Stripe">{Locale.label("settings.givingSettingsEdit.stripe")}</MenuItem>
               <MenuItem value="Paypal">{Locale.label("settings.givingSettingsEdit.paypal")}</MenuItem>
+              <MenuItem value="KingdomFunding">Kingdom Funding</MenuItem>
             </Select>
           </FormControl>
         </Grid>

@@ -1473,7 +1473,9 @@
       "achFlatRate": "Flat Rate [ ACH ]",
       "achHardLimit": "Hard limit [ ACH ]",
       "paypalFlatRate": "Flat Rate [ PayPal ]",
-      "paypalTransactionFee": "Transaction Fee [ PayPal ]"
+      "paypalTransactionFee": "Transaction Fee [ PayPal ]",
+      "kingdomFundingFlatRate": "Flat Rate [ Kingdom Funding ]",
+      "kingdomFundingTransactionFee": "Transaction Fee [ Kingdom Funding ]"
     },
     "giving": {
       "secretPlaceholder": "********"
@@ -1500,7 +1502,8 @@
       "clientId": "Client ID",
       "clientSecret": "Client Secret",
       "transFee": "Transaction Fee",
-      "saveError": "Failed to save giving settings"
+      "saveError": "Failed to save giving settings",
+      "merchantId": "Merchant ID"
     },
     "manageChurch": {
       "imEx": "Import/Export",
