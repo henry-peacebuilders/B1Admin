@@ -118,7 +118,7 @@ export const ChurchSettingsEdit: React.FC<Props> = (props) => {
 
   const giveSection = () => {
     if (!UserHelper.checkAccess(Permissions.givingApi.settings.edit)) return null;
-    return <GivingSettingsEdit churchId={church?.id || ""} saveTrigger={saveTrigger} onError={handleGivingError} />;
+    return <GivingSettingsEdit churchId={church?.id || ""} churchInfo={church} saveTrigger={saveTrigger} onError={handleGivingError} />;
   };
 
   React.useEffect(() => setChurch(props.church), [props.church]);

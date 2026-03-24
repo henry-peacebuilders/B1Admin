@@ -1,13 +1,14 @@
 import React from "react";
 import { FormControl, InputLabel, MenuItem, Select, TextField, Grid, Stack, Switch, Typography, Tooltip, IconButton, type SelectChangeEvent } from "@mui/material";
 import HelpIcon from "@mui/icons-material/Help";
-import { ApiHelper, ErrorMessages, Locale, UniqueIdHelper } from "@churchapps/apphelper";
+import { ApiHelper, ErrorMessages, Locale, UniqueIdHelper, UserHelper, type ChurchInterface } from "@churchapps/apphelper";
 import { type PaymentGatewaysInterface } from "../../helpers";
 import { FeeOptionsSettingsEdit } from "./FeeOptionsSettingsEdit";
 
 interface Props {
   churchId: string;
   saveTrigger: Date | null;
+  churchInfo: ChurchInterface;
   onError?: (errors: string[]) => void;
 }
 
@@ -38,12 +39,15 @@ export const GivingSettingsEdit: React.FC<Props> = (props) => {
   const getKeys = () => {
     if (provider === "") return null;
     else {
-      const publicLabel = provider === "Paypal"
-        ? Locale.label("settings.givingSettingsEdit.clientId") || "Client ID"
-        : Locale.label("settings.givingSettingsEdit.pubKey");
-      const privateLabel = provider === "Paypal"
-        ? Locale.label("settings.givingSettingsEdit.clientSecret") || "Client Secret"
-        : Locale.label("settings.givingSettingsEdit.secKey");
+      let publicLabel = Locale.label("settings.givingSettingsEdit.pubKey");
+      let privateLabel = Locale.label("settings.givingSettingsEdit.secKey");
+      if (provider === "Paypal") {
+        publicLabel = Locale.label("settings.givingSettingsEdit.clientId") || "Client ID";
+        privateLabel = Locale.label("settings.givingSettingsEdit.clientSecret") || "Client Secret";
+      } else if (provider === "KingdomFunding") {
+        publicLabel = "Tokenization Key";
+        privateLabel = "Source Key";
+      }
 
       return (
         <>
@@ -156,6 +160,7 @@ export const GivingSettingsEdit: React.FC<Props> = (props) => {
             <InputLabel>{Locale.label("settings.givingSettingsEdit.prov")}</InputLabel>
             <Select name="provider" label={Locale.label("settings.givingSettingsEdit.prov")} value={provider || ""} onChange={handleChange}>
               <MenuItem value="">{Locale.label("settings.givingSettingsEdit.none")}</MenuItem>
+              <MenuItem value="KingdomFunding">Kingdom Funding (Recommended)</MenuItem>
               <MenuItem value="Stripe">{Locale.label("settings.givingSettingsEdit.stripe")}</MenuItem>
               <MenuItem value="Paypal">{Locale.label("settings.givingSettingsEdit.paypal")}</MenuItem>
             </Select>
@@ -172,6 +177,13 @@ export const GivingSettingsEdit: React.FC<Props> = (props) => {
           <Grid size={{ xs: 12 }}>
             <Typography variant="body2" color="textSecondary" component="div">
               {Locale.label("settings.givingSettingsEdit.paypalGoTo")} <a href="https://developer.paypal.com/" target="_blank" rel="noopener noreferrer">{Locale.label("settings.givingSettingsEdit.paypalDeveloper")}</a>, {Locale.label("settings.givingSettingsEdit.paypalLogin")} <strong>{Locale.label("settings.givingSettingsEdit.apiCredentials")}</strong> {Locale.label("settings.givingSettingsEdit.paypalCreateApp")}
+            </Typography>
+          </Grid>
+        )}
+        {provider === "KingdomFunding" && (
+          <Grid size={{ xs: 12 }}>
+            <Typography variant="body2" color="textSecondary" component="div">
+              Visit <a href={`https://kingdomfunding.org/begin-registration/?sponsor=chums&email=${UserHelper.user?.email}&org=${props.churchInfo?.name}&full_name=${UserHelper.user?.firstName}+${UserHelper.user?.lastName}&phone=${UserHelper.person.contactInfo?.workPhone}&address1=${props.churchInfo?.address1}&address2=${props.churchInfo?.address2}&state=${props.churchInfo?.state}&zip=${props.churchInfo?.zip}&country=${props.churchInfo?.country}`} target="_blank" rel="noopener noreferrer">kingdomfunding.org</a> to get started. Enter your <strong>Tokenization Key</strong> and <strong>Source Key</strong> from your Kingdom Funding dashboard.
             </Typography>
           </Grid>
         )}

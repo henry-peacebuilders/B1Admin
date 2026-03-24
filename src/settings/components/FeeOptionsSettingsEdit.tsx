@@ -17,6 +17,8 @@ export const FeeOptionsSettingsEdit: React.FC<Props> = (props) => {
   const [hardLimitACH, setHardLimitACH] = React.useState<GenericSettingInterface>(null);
   const [flatRatePayPal, setFlatRatePayPal] = React.useState<GenericSettingInterface>(null);
   const [transFeePayPal, setTransFeePayPal] = React.useState<GenericSettingInterface>(null);
+  const [flatRateKF, setFlatRateKF] = React.useState<GenericSettingInterface>(null);
+  const [transFeeKF, setTransFeeKF] = React.useState<GenericSettingInterface>(null);
   const [options, setOptions] = React.useState({
     flatRateCC: "0.30",
     transFeeCC: "2.9",
@@ -24,6 +26,8 @@ export const FeeOptionsSettingsEdit: React.FC<Props> = (props) => {
     hardLimitACH: "5",
     flatRatePayPal: "0.30",
     transFeePayPal: "2.9",
+    flatRateKF: "0.30",
+    transFeeKF: "2.9",
     symbol: "$",
     currency: "usd"
   });
@@ -100,6 +104,18 @@ export const FeeOptionsSettingsEdit: React.FC<Props> = (props) => {
       o.transFeePayPal = paypalTransactionFee[0].value;
     }
 
+    const kfFlatRate = allSettings.filter((s) => s.keyName === "flatRateKF");
+    if (kfFlatRate.length > 0) {
+      setFlatRateKF(kfFlatRate[0]);
+      o.flatRateKF = kfFlatRate[0].value;
+    }
+
+    const kfTransactionFee = allSettings.filter((s) => s.keyName === "transFeeKF");
+    if (kfTransactionFee.length > 0) {
+      setTransFeeKF(kfTransactionFee[0]);
+      o.transFeeKF = kfTransactionFee[0].value;
+    }
+
     o.currency = currentCurrency;
     setOptions(o);
     setHasLoadedData(true);
@@ -115,6 +131,8 @@ export const FeeOptionsSettingsEdit: React.FC<Props> = (props) => {
       case "achHardLimit": o.hardLimitACH = value; break;
       case "paypalFlatRate": o.flatRatePayPal = value; break;
       case "paypalTransactionFee": o.transFeePayPal = value; break;
+      case "kfFlatRate": o.flatRateKF = value; break;
+      case "kfTransactionFee": o.transFeeKF = value; break;
     }
     setOptions(o);
   };
@@ -138,7 +156,13 @@ export const FeeOptionsSettingsEdit: React.FC<Props> = (props) => {
     const transFeePayPalSett: GenericSettingInterface = transFeePayPal === null ? { churchId: props.churchId, public: 1, keyName: "transFeePayPal" } : transFeePayPal;
     transFeePayPalSett.value = options.transFeePayPal;
 
-    ApiHelper.post("/settings", [flatRateCCSett, transFeeCCSett, flatRateACHSett, hardLimitACHSett, flatRatePayPalSett, transFeePayPalSett], "MembershipApi");
+    const flatRateKFSett: GenericSettingInterface = flatRateKF === null ? { churchId: props.churchId, public: 1, keyName: "flatRateKF" } : flatRateKF;
+    flatRateKFSett.value = options.flatRateKF;
+
+    const transFeeKFSett: GenericSettingInterface = transFeeKF === null ? { churchId: props.churchId, public: 1, keyName: "transFeeKF" } : transFeeKF;
+    transFeeKFSett.value = options.transFeeKF;
+
+    ApiHelper.post("/settings", [flatRateCCSett, transFeeCCSett, flatRateACHSett, hardLimitACHSett, flatRatePayPalSett, transFeePayPalSett, flatRateKFSett, transFeeKFSett], "MembershipApi");
   };
 
   const checkSave = () => {
@@ -173,6 +197,7 @@ export const FeeOptionsSettingsEdit: React.FC<Props> = (props) => {
 
   const showStripeFields = props.provider === "Stripe";
   const showPayPalFields = props.provider === "Paypal";
+  const showKFFields = props.provider === "KingdomFunding";
   const currentCurrency = (props.currency || "usd").toLowerCase();
   const showACHFields = currentCurrency === "usd";
 
@@ -266,6 +291,36 @@ export const FeeOptionsSettingsEdit: React.FC<Props> = (props) => {
               name="paypalTransactionFee"
               onChange={handleChange}
               value={options.transFeePayPal}
+              defaultValue=""
+              InputProps={{ endAdornment: <Icon fontSize="small">percent</Icon> }}
+            />
+          </Grid>
+        </>
+      )}
+      {showKFFields && (
+        <>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <TextField
+              fullWidth
+              margin="dense"
+              type="number"
+              label="Kingdom Funding Flat Rate"
+              name="kfFlatRate"
+              onChange={handleChange}
+              value={options.flatRateKF}
+              defaultValue=""
+              InputProps={{ startAdornment: <Icon fontSize="small">attach_money</Icon> }}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <TextField
+              fullWidth
+              margin="dense"
+              type="number"
+              label="Kingdom Funding Transaction Fee"
+              name="kfTransactionFee"
+              onChange={handleChange}
+              value={options.transFeeKF}
               defaultValue=""
               InputProps={{ endAdornment: <Icon fontSize="small">percent</Icon> }}
             />

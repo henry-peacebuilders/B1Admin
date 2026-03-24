@@ -42,11 +42,16 @@ If you'd like to set up the project locally, see our [development guide](https:/
 
 ### ⚙️ Payment Gateway Setup
 
-To accept online donations you must first register for developer credentials with Stripe and PayPal:
+To accept online donations you must first register for developer credentials with one of the supported payment providers:
 
 - **Stripe**: Visit https://dashboard.stripe.com/register (or sign in at https://dashboard.stripe.com/login), then navigate to **Developers → API keys** to copy your Publishable Key and Secret Key for both test and live modes.
 - **PayPal**: Go to https://developer.paypal.com/, log in or create an account, then under **My Apps & Credentials** create a new application to obtain your Sandbox and Live Client ID and Secret.
+- **KingdomFunding (Recommended)**: Kingdom Funding is a payment processing option built with Christian values in mind! To get started:
+  1. Visit the Kingdom Funding signup page (https://kingdomfunding.org/begin-registration/?sponsor=chums) and fill out the application form.
+  2. Kingdom Funding will walk you through the account onboarding process, including identity verification and bank account setup.
+  3. Once your account is approved, you will receive your API Source Key (private key) and Tokenization Key (public key) from the merchant portal.
+  4. In B1Admin, go to **Settings → Giving Settings**, select **Kingdom Funding** as the provider, paste in your Public Key (Tokenization Key) and Private Key (API Source Key), and save.
 
-After obtaining your tokens, open **Settings → Giving Settings** in B1Admin, select the provider (Stripe or PayPal), paste in your Public and Private keys, and toggle "Pay Fees" as desired. Finally, configure your fee parameters in **Fee Options**.
+After obtaining your tokens, open **Settings → Giving Settings** in B1Admin, select the provider, paste in your Public and Private keys, and toggle "Pay Fees" as desired. Finally, configure your fee parameters in **Fee Options**.
 
 [![B1Admin Dev Setup](https://img.youtube.com/vi/5zsEJEp6yMw/0.jpg)](https://www.youtube.com/watch?v=5zsEJEp6yMw)
