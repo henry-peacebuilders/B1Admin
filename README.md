@@ -51,6 +51,10 @@ To accept online donations you must first register for developer credentials wit
   2. Kingdom Funding will walk you through the account onboarding process, including identity verification and bank account setup.
   3. Once your account is approved, you will receive your API Source Key (private key) and Tokenization Key (public key) from the merchant portal.
   4. In B1Admin, go to **Settings → Giving Settings**, select **Kingdom Funding** as the provider, paste in your Public Key (Tokenization Key) and Private Key (API Source Key), and save.
+  5. **Configure the webhook URL in your Accept Blue Control Panel** so the system gets notified about transaction state changes (recurring charges, ACH settlements, returns):
+     - URL: `https://api.churchapps.org/giving/donate/webhook/kingdomfunding?churchId={YOUR_CHURCH_ID}` (replace `{YOUR_CHURCH_ID}` with the church ID from B1Admin)
+     - Generate a Webhook Signing Secret in the Accept Blue Control Panel and paste the same value into the **Webhook Key** field in B1Admin's Giving Settings. Both sides must match.
+     - Subscribe at minimum to: `transaction.succeeded.charge`, `transaction.declined.charge`, `transaction.status.settled`, `transaction.status.returned`.
 
 After obtaining your tokens, open **Settings → Giving Settings** in B1Admin, select the provider, paste in your Public and Private keys, and toggle "Pay Fees" as desired. Finally, configure your fee parameters in **Fee Options**.
 
